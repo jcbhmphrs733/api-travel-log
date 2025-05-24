@@ -6,7 +6,7 @@ const port = 3000;
 
 app.use("/", require("./routes/index"));
 
-mongodb.initialize((err) => {
+mongodb.initializeDatabase((err) => {
   if (err) {
     console.error("Failed to connect to the database:", err);
     return;

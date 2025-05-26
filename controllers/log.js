@@ -3,6 +3,8 @@ const mongodb = require("../data/database");
 const ObjectId = require("mongodb").ObjectId;
 
 const getLog = async (req, res) => {
+  //#swagger.tags = ['Log']
+  //#swagger.description = 'Get all log entries for the year 2000-2001'
   const result = await mongodb.getDb().collection("2000-2001").find();
   result
     .toArray()
@@ -16,6 +18,8 @@ const getLog = async (req, res) => {
 };
 
 const getEntry = async (req, res) => {
+  //#swagger.tags = ['Log']
+  //#swagger.description = 'Get a specific log entry by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
   const result = await mongodb
     .getDb()
@@ -33,6 +37,8 @@ const getEntry = async (req, res) => {
 };
 
 const postEntry = async (req, res) => {
+  //#swagger.tags = ['Log']
+  //#swagger.description = 'Create a new log entry'
   const entry = {
     date: req.body.date,
     time: req.body.time,
@@ -59,6 +65,8 @@ const postEntry = async (req, res) => {
 };
 
 const updateEntry = async (req, res) => {
+  //#swagger.tags = ['Log']
+  //#swagger.description = 'Update an existing log entry by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
   const entry = {
     date: req.body.date,
@@ -80,6 +88,8 @@ const updateEntry = async (req, res) => {
 };
 
 const deleteEntry = async (req, res) => {
+  //#swagger.tags = ['Log']
+  //#swagger.description = 'Delete a log entry by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
   const response = await mongodb.getDb().collection("2000-2001").deleteOne({ _id: entryId });
   if (response.deletedCount > 0) {
@@ -90,6 +100,8 @@ const deleteEntry = async (req, res) => {
 };
 
 const postMany = async (req, res) => {
+  //#swagger.tags = ['Log']
+  //#swagger.description = 'Create multiple log entries at once'
   const entries = req.body; // Assuming entries is an array of entry objects
   if (!Array.isArray(entries)) {
     return res.status(400).json({ message: "Invalid input format. Expected an array of entries." });

@@ -1,12 +1,28 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const mongodb = require("./data/database");
+const e = require("express");
 
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Z-Key"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  next();
+});
+
 app.use("/", require("./routes/index"));
 
-mongodb.initializeDatabase((err) => {
+mongodb.initDb((err) => {
   if (err) {
     console.error("Failed to connect to the database:", err);
     return;
@@ -17,5 +33,3 @@ mongodb.initializeDatabase((err) => {
     });
   }
 });
-
-

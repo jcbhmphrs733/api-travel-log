@@ -1,12 +1,13 @@
 const mongodb = require("../data/database");
+const createError = require("http-errors");
 
 const ObjectId = require("mongodb").ObjectId;
 
 const getLog = async (req, res) => {
   //#swagger.tags = ['Log']
   //#swagger.description = 'Get all log entries for the year 2000-2001'
-  const result = await mongodb.getDb().collection("2000-2001").find();
-  result
+  const response = await mongodb.getDb().collection("2000-2001").find();
+  response
     .toArray()
     .then((log) => {
       res.setHeader("Content-Type", "application/json");
@@ -21,19 +22,17 @@ const getEntry = async (req, res) => {
   //#swagger.tags = ['Log']
   //#swagger.description = 'Get a specific log entry by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
-  const result = await mongodb
+
+  const response = await mongodb
     .getDb()
     .collection("2000-2001")
-    .find({ _id: entryId });
-  result
-    .toArray()
-    .then((log) => {
-      res.setHeader("Content-Type", "application/json");
-      res.status(200).json(log);
-    })
-    .catch((err) => {
-      console.error("Error fetching logs:", err);
-    });
+    .findOne({ _id: entryId });
+
+  if (!response) {
+    throw createError(404, "Entry does not exist.");
+  }
+  res.setHeader("Content-Type", "application/json");
+  res.status(200).json(response);
 };
 
 const postEntry = async (req, res) => {
@@ -51,14 +50,14 @@ const postEntry = async (req, res) => {
     potable_water_gallons: req.body.potable_water_gallons,
   };
 
-  const result = await mongodb
+  const response = await mongodb
     .getDb()
     .collection("2000-2001")
     .insertOne(entry);
-  if (result.acknowledged) {
+  if (response.acknowledged) {
     res
       .status(201)
-      .json({ message: "Entry created successfully", id: result.insertedId });
+      .json({ message: "Entry created successfully", id: response.insertedId });
   } else {
     res.status(500).json({ message: "Failed to create entry" });
   }
@@ -68,6 +67,13 @@ const updateEntry = async (req, res) => {
   //#swagger.tags = ['Log']
   //#swagger.description = 'Update an existing log entry by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
+  try {
+    if (!entryId) {
+      throw createError(404, "Entry does not exist.");
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
   const entry = {
     date: req.body.date,
     time: req.body.time,
@@ -79,11 +85,16 @@ const updateEntry = async (req, res) => {
     heading: req.body.heading,
     potable_water_gallons: req.body.potable_water_gallons,
   };
-  const response = await mongodb.getDb().collection("2000-2001").replaceOne({ _id: entryId }, entry);
+  const response = await mongodb
+    .getDb()
+    .collection("2000-2001")
+    .replaceOne({ _id: entryId }, entry);
   if (response.modifiedCount > 0) {
     res.status(200).send();
   } else {
-    res.status(500).json(response.error || "An error occurred while updating the user.");
+    res
+      .status(500)
+      .json(response.error || "An error occurred while updating the user.");
   }
 };
 
@@ -91,11 +102,23 @@ const deleteEntry = async (req, res) => {
   //#swagger.tags = ['Log']
   //#swagger.description = 'Delete a log entry by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
-  const response = await mongodb.getDb().collection("2000-2001").deleteOne({ _id: entryId });
+  const response = await mongodb
+    .getDb()
+    .collection("2000-2001")
+    .deleteOne({ _id: entryId });
   if (response.deletedCount > 0) {
     res.status(200).send();
   } else {
-    res.status(500).json(response.error || "An error occurred while deleting the user.");
+    res
+      .status(500)
+      .json(response.error || "An error occurred while deleting the user.");
+  }
+  try {
+    if (!response) {
+      throw createError(404, "Entry does not exist.");
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 };
 
@@ -104,17 +127,24 @@ const postMany = async (req, res) => {
   //#swagger.description = 'Create multiple log entries at once'
   const entries = req.body; // Assuming entries is an array of entry objects
   if (!Array.isArray(entries)) {
-    return res.status(400).json({ message: "Invalid input format. Expected an array of entries." });
+    return res
+      .status(400)
+      .json({ message: "Invalid input format. Expected an array of entries." });
   }
 
-  const result = await mongodb.getDb().collection("2000-2001").insertMany(entries);
-  if (result.acknowledged) {
-    res.status(201).json({ message: "Entries created successfully", ids: result.insertedIds });
+  const response = await mongodb
+    .getDb()
+    .collection("2000-2001")
+    .insertMany(entries);
+  if (response.acknowledged) {
+    res.status(201).json({
+      message: "Entries created successfully",
+      ids: response.insertedIds,
+    });
   } else {
     res.status(500).json({ message: "Failed to create entries" });
   }
 };
-
 
 module.exports = {
   getLog,
@@ -122,5 +152,5 @@ module.exports = {
   postEntry,
   updateEntry,
   deleteEntry,
-  postMany
+  postMany,
 };

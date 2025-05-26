@@ -1,13 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongodb = require("./data/database");
-const e = require("express");
+const createError = require("http-errors");
 
 const app = express();
 const port = 3000;
 
+
+
 app.use(express.static("public"));
 app.use(bodyParser.json());
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -22,6 +25,19 @@ app.use((req, res, next) => {
 });
 
 app.use("/", require("./routes/index"));
+
+app.use((req, res, next) => {
+  next(createError(404, "Not Found"));
+});
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.send({
+    error: {
+      status: err.status || 500,
+      message: err.message,
+    },
+  });
+});
 
 mongodb.initDb((err) => {
   if (err) {

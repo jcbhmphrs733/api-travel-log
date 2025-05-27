@@ -56,7 +56,7 @@ const postCrewMember = async (req, res) => {
       .status(201)
       .json({ message: "Entry created successfully", id: response.insertedId });
   } else {
-    res.status(500).json({ message: "Failed to create entry" });
+    throw createError(500, "An error occurred while creating the crew member.");
   }
 };
 
@@ -88,9 +88,7 @@ const updateCrewMember = async (req, res) => {
   if (response.modifiedCount > 0) {
     res.status(200).send();
   } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while updating the user.");
+    throw createError(500, "An error occurred while updating the crew member.");
   }
 };
 

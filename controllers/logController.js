@@ -46,19 +46,16 @@ const postEntry = async (req, res) => {
     temperature: req.body.temperature,
     wind_speed: req.body.wind_speed,
     wind_direction: req.body.wind_direction,
-    heading: req.body.heading
+    heading: req.body.heading,
   };
 
-  const response = await mongodb
-    .getDb()
-    .collection("log")
-    .insertOne(entry);
+  const response = await mongodb.getDb().collection("log").insertOne(entry);
   if (response.acknowledged) {
     res
       .status(201)
       .json({ message: "Entry created successfully", id: response.insertedId });
   } else {
-    res.status(500).json({ message: "Failed to create entry" });
+    throw createError(500, "An error occurred while creating the log entry.");
   }
 };
 
@@ -81,7 +78,7 @@ const updateEntry = async (req, res) => {
     temperature: req.body.temperature,
     wind_speed: req.body.wind_speed,
     wind_direction: req.body.wind_direction,
-    heading: req.body.heading
+    heading: req.body.heading,
   };
   const response = await mongodb
     .getDb()
@@ -90,9 +87,7 @@ const updateEntry = async (req, res) => {
   if (response.modifiedCount > 0) {
     res.status(200).send();
   } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while updating the user.");
+    throw createError(500, "An error occurred while updating the log entry.");
   }
 };
 
@@ -106,11 +101,7 @@ const deleteEntry = async (req, res) => {
     .deleteOne({ _id: entryId });
   if (response.deletedCount > 0) {
     res.status(200).send();
-  } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while deleting the user.");
-  }
+  } 
   try {
     if (!response) {
       throw createError(404, "Entry does not exist.");
@@ -130,10 +121,7 @@ const postMany = async (req, res) => {
       .json({ message: "Invalid input format. Expected an array of entries." });
   }
 
-  const response = await mongodb
-    .getDb()
-    .collection("log")
-    .insertMany(entries);
+  const response = await mongodb.getDb().collection("log").insertMany(entries);
   if (response.acknowledged) {
     res.status(201).json({
       message: "Entries created successfully",

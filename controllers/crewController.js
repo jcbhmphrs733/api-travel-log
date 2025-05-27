@@ -78,7 +78,6 @@ const updateCrewMember = async (req, res) => {
     age: req.body.age,
     home_country: req.body.home_country,
     time_onboard_months: req.body.time_onboard_months,
-    wind_direction: req.body.wind_direction,
     hire_date: req.body.hire_date
   };
   const response = await mongodb

@@ -13,9 +13,10 @@ const buildHome = async (req, res) => {
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 </head>
 <body>
-    <h1>Welcome Home!</h1>
-    <h2>Routes:</h2>
+    <h1>Welcome Aboard!</h1>
+    <h2>Quick Routes:</h2>
     <a href="/log">getLog()</a>
+    <a href="/crew">getCrew()</a>
     <a href="/api-docs">Swagger</a>
 </body>
 </html>`);

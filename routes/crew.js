@@ -1,12 +1,32 @@
 const router = require("express").Router();
 
-const crewController = require("../controllers/crew");
+const crewController = require("../controllers/crewController");
 
-router.get("/", crewController.getLog);
-router.get("/:id", crewController.getEntry);
-router.post("/", crewController.postEntry);
-router.put("/:id", crewController.updateEntry);
-router.delete("/:id", crewController.deleteEntry);
+const { param, validationResult } = require("express-validator");
+
+router.get("/", crewController.getCrew);
+
+router.get(
+  "/:id",
+  param("id")
+    .isHexadecimal()
+    .isLength({ min: 24, max: 24 })
+    .withMessage("Id must be a 24-char hex string"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    crewController.getCrewMember(req, res, next);
+  }
+);
+
+router.post("/", crewController.postCrewMember);
+
+router.put("/:id", crewController.updateCrewMember);
+
+router.delete("/:id", crewController.deleteCrewMember);
+
 router.post("/many", crewController.postMany);
 
 module.exports = router;

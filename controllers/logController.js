@@ -6,7 +6,7 @@ const ObjectId = require("mongodb").ObjectId;
 const getLog = async (req, res) => {
   //#swagger.tags = ['Log']
   //#swagger.description = 'Get all log entries for the year 2000-2001'
-  const response = await mongodb.getDb().collection("2000-2001").find();
+  const response = await mongodb.getDb().collection("log").find();
   response
     .toArray()
     .then((log) => {
@@ -25,7 +25,7 @@ const getEntry = async (req, res) => {
 
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("log")
     .findOne({ _id: entryId });
 
   if (!response) {
@@ -46,13 +46,12 @@ const postEntry = async (req, res) => {
     temperature: req.body.temperature,
     wind_speed: req.body.wind_speed,
     wind_direction: req.body.wind_direction,
-    heading: req.body.heading,
-    potable_water_gallons: req.body.potable_water_gallons,
+    heading: req.body.heading
   };
 
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("log")
     .insertOne(entry);
   if (response.acknowledged) {
     res
@@ -82,12 +81,11 @@ const updateEntry = async (req, res) => {
     temperature: req.body.temperature,
     wind_speed: req.body.wind_speed,
     wind_direction: req.body.wind_direction,
-    heading: req.body.heading,
-    potable_water_gallons: req.body.potable_water_gallons,
+    heading: req.body.heading
   };
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("log")
     .replaceOne({ _id: entryId }, entry);
   if (response.modifiedCount > 0) {
     res.status(200).send();
@@ -104,7 +102,7 @@ const deleteEntry = async (req, res) => {
   const entryId = ObjectId.createFromHexString(req.params.id);
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("log")
     .deleteOne({ _id: entryId });
   if (response.deletedCount > 0) {
     res.status(200).send();
@@ -134,7 +132,7 @@ const postMany = async (req, res) => {
 
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("log")
     .insertMany(entries);
   if (response.acknowledged) {
     res.status(201).json({

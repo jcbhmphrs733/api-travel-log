@@ -1,12 +1,11 @@
 const mongodb = require("../data/database");
 const createError = require("http-errors");
-
 const ObjectId = require("mongodb").ObjectId;
 
-const getLog = async (req, res) => {
+const getCrew = async (req, res) => {
   //#swagger.tags = ['Crew']
   //#swagger.description = 'Get all crew members'
-  const response = await mongodb.getDb().collection("2000-2001").find();
+  const response = await mongodb.getDb().collection("crew").find();
   response
     .toArray()
     .then((log) => {
@@ -14,45 +13,43 @@ const getLog = async (req, res) => {
       res.status(200).json(log);
     })
     .catch((err) => {
-      console.error("Error fetching logs:", err);
+      console.error("Error fetching crew:", err);
     });
 };
 
-const getEntry = async (req, res) => {
+const getCrewMember = async (req, res) => {
   //#swagger.tags = ['Crew']
   //#swagger.description = 'Get a specific crew member by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
 
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("crew")
     .findOne({ _id: entryId });
 
   if (!response) {
-    throw createError(404, "Entry does not exist.");
+    throw createError(404, "Crew member ID does not exist.");
   }
   res.setHeader("Content-Type", "application/json");
   res.status(200).json(response);
 };
 
-const postEntry = async (req, res) => {
+const postCrewMember = async (req, res) => {
   //#swagger.tags = ['Crew']
-    //#swagger.description = 'Create a new crew member'
+  //#swagger.description = 'Create a new crew member'
   const entry = {
-    date: req.body.date,
-    time: req.body.time,
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
-    temperature: req.body.temperature,
-    wind_speed: req.body.wind_speed,
-    wind_direction: req.body.wind_direction,
-    heading: req.body.heading,
-    potable_water_gallons: req.body.potable_water_gallons,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    rank: req.body.rank,
+    age: req.body.age,
+    home_country: req.body.home_country,
+    time_onboard_months: req.body.time_onboard_months,
+    hire_date: req.body.hire_date
   };
 
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("crew")
     .insertOne(entry);
   if (response.acknowledged) {
     res
@@ -63,9 +60,9 @@ const postEntry = async (req, res) => {
   }
 };
 
-const updateEntry = async (req, res) => {
-  //#swagger.tags = ['Log']
-  //#swagger.description = 'Update an existing log entry by ID'
+const updateCrewMember = async (req, res) => {
+  //#swagger.tags = ['Crew']
+  //#swagger.description = 'Update an existing crew member by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
   try {
     if (!entryId) {
@@ -75,19 +72,18 @@ const updateEntry = async (req, res) => {
     console.log(error.message);
   }
   const entry = {
-    date: req.body.date,
-    time: req.body.time,
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
-    temperature: req.body.temperature,
-    wind_speed: req.body.wind_speed,
+    fist_name: req.body.fist_name,
+    last_name: req.body.last_name,
+    rank: req.body.rank,
+    age: req.body.age,
+    home_country: req.body.home_country,
+    time_onboard_months: req.body.time_onboard_months,
     wind_direction: req.body.wind_direction,
-    heading: req.body.heading,
-    potable_water_gallons: req.body.potable_water_gallons,
+    hire_date: req.body.hire_date
   };
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("crew")
     .replaceOne({ _id: entryId }, entry);
   if (response.modifiedCount > 0) {
     res.status(200).send();
@@ -98,13 +94,13 @@ const updateEntry = async (req, res) => {
   }
 };
 
-const deleteEntry = async (req, res) => {
-  //#swagger.tags = ['Log']
-  //#swagger.description = 'Delete a log entry by ID'
+const deleteCrewMember = async (req, res) => {
+  //#swagger.tags = ['Crew']
+  //#swagger.description = 'Delete a crew member by ID'
   const entryId = ObjectId.createFromHexString(req.params.id);
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("crew")
     .deleteOne({ _id: entryId });
   if (response.deletedCount > 0) {
     res.status(200).send();
@@ -123,8 +119,8 @@ const deleteEntry = async (req, res) => {
 };
 
 const postMany = async (req, res) => {
-  //#swagger.tags = ['Log']
-  //#swagger.description = 'Create multiple log entries at once'
+  //#swagger.tags = ['Crew']
+  //#swagger.description = 'Create multiple crew members at once'
   const entries = req.body; // Assuming entries is an array of entry objects
   if (!Array.isArray(entries)) {
     return res
@@ -134,7 +130,7 @@ const postMany = async (req, res) => {
 
   const response = await mongodb
     .getDb()
-    .collection("2000-2001")
+    .collection("crew")
     .insertMany(entries);
   if (response.acknowledged) {
     res.status(201).json({
@@ -147,10 +143,10 @@ const postMany = async (req, res) => {
 };
 
 module.exports = {
-  getLog,
-  getEntry,
-  postEntry,
-  updateEntry,
-  deleteEntry,
+  getCrew,
+  getCrewMember,
+  postCrewMember,
+  updateCrewMember,
+  deleteCrewMember,
   postMany,
 };

@@ -8,33 +8,10 @@
   "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "http",
-    "https"
+    "https",
+    "http"
   ],
   "paths": {
-    "/": {
-      "get": {
-        "tags": [
-          "Home"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api-docs": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/log/": {
       "get": {
         "tags": [
@@ -84,9 +61,6 @@
                   "example": "any"
                 },
                 "heading": {
-                  "example": "any"
-                },
-                "potable_water_gallons": {
                   "example": "any"
                 }
               }
@@ -167,9 +141,6 @@
                 },
                 "heading": {
                   "example": "any"
-                },
-                "potable_water_gallons": {
-                  "example": "any"
                 }
               }
             }
@@ -207,18 +178,165 @@
         }
       }
     },
-    "/log/many": {
+    "/crew/": {
+      "get": {
+        "tags": [
+          "Crew"
+        ],
+        "description": "Get all crew members",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
-          "Log"
+          "Crew"
         ],
-        "description": "Create multiple log entries at once",
+        "description": "Create a new crew member",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fist_name": {
+                  "example": "any"
+                },
+                "last_name": {
+                  "example": "any"
+                },
+                "rank": {
+                  "example": "any"
+                },
+                "age": {
+                  "example": "any"
+                },
+                "home_country": {
+                  "example": "any"
+                },
+                "time_onboard_months": {
+                  "example": "any"
+                },
+                "wind_direction": {
+                  "example": "any"
+                },
+                "hire_date": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/crew/{id}": {
+      "get": {
+        "tags": [
+          "Crew"
+        ],
+        "description": "Get a specific crew member by ID",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Crew"
+        ],
+        "description": "Update an existing crew member by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fist_name": {
+                  "example": "any"
+                },
+                "last_name": {
+                  "example": "any"
+                },
+                "rank": {
+                  "example": "any"
+                },
+                "age": {
+                  "example": "any"
+                },
+                "home_country": {
+                  "example": "any"
+                },
+                "time_onboard_months": {
+                  "example": "any"
+                },
+                "wind_direction": {
+                  "example": "any"
+                },
+                "hire_date": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Crew"
+        ],
+        "description": "Delete a crew member by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "500": {
             "description": "Internal Server Error"

@@ -2,11 +2,13 @@ const router = require("express").Router();
 
 const logController = require("../controllers/logController");
 
+const validateObjectId = require("../utils/validateObjectId");
+
 router.get("/", logController.getLog);
-router.get("/:id", logController.getEntry);
+router.get("/:id",validateObjectId, logController.getEntry);
 router.post("/", logController.postEntry);
-router.put("/:id", logController.updateEntry);
-router.delete("/:id", logController.deleteEntry);
+router.put("/:id",validateObjectId, logController.updateEntry);
+router.delete("/:id",validateObjectId, logController.deleteEntry);
 router.post("/many", logController.postMany);
 
 module.exports = router;

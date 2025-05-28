@@ -5,7 +5,7 @@
     "description": "API for a logging travel entries",
     "version": "1.0.0"
   },
-  "host": "api-travel-log.onrender.com/",
+  "host": "api-travel-log.onrender.com",
   "basePath": "/",
   "schemes": [
     "http"

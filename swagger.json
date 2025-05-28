@@ -2,13 +2,14 @@
   "swagger": "2.0",
   "info": {
     "title": "travel-log-api",
-    "description": "API for a logging travel entries",
+    "description": "API for a logging travel entries and crew members",
     "version": "1.0.0"
   },
   "host": "api-travel-log.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "paths": {
     "/log/": {

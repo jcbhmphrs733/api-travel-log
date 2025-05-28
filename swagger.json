@@ -162,7 +162,7 @@
         "tags": [
           "Log"
         ],
-        "description": "Delete a log entry by ID",
+        "description": "Delete an entry by ID",
         "parameters": [
           {
             "name": "id",
@@ -177,6 +177,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

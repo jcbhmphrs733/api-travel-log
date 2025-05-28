@@ -16,6 +16,6 @@ router.put("/:id", validateObjectId, crewController.updateCrewMember);
 
 router.delete("/:id", validateObjectId, crewController.updateCrewMember);
 
-router.post("/many", crewController.postMany);
+// router.post("/many", crewController.postMany);
 
 module.exports = router;

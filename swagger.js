@@ -2,9 +2,9 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         title: 'travel-log-api',
-        description: 'API for a logging travel entries',
+        description: 'API for a logging travel entries and crew members',
     },
-    host: 'localhost:3000',
+    host: "api-travel-log.onrender.com",
     schemes: ['https', 'http'],
 };
 

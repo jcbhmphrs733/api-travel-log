@@ -93,21 +93,23 @@ const updateEntry = async (req, res) => {
 
 const deleteEntry = async (req, res) => {
   //#swagger.tags = ['Log']
-  //#swagger.description = 'Delete a log entry by ID'
-  const entryId = ObjectId.createFromHexString(req.params.id);
-  const response = await mongodb
-    .getDb()
-    .collection("log")
-    .deleteOne({ _id: entryId });
-  if (response.deletedCount > 0) {
-    res.status(200).send();
-  } 
-  try {
-    if (!response) {
-      throw createError(404, "Entry does not exist.");
+  //#swagger.description = 'Delete an entry by ID'
+  try{
+    const entryId = ObjectId.createFromHexString(req.params.id);
+    const response = await mongodb
+      .getDb()
+      .collection("log")
+      .deleteOne({ _id: entryId });
+    if (response.deletedCount === 0) {
+      throw createError(404, "Entry ID does not exist.");
+    } else {
+      res
+        .status(200)
+        .json({message: "Entry deleted succesfully."});
     }
   } catch (error) {
-    console.log(error.message);
+    console.error("Error deleting entry:", error);
+    res.status(500).json({ message: "An error occurred while deleting the entry." });
   }
 };
 

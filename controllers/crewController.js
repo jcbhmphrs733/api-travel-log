@@ -63,9 +63,9 @@ const postCrewMember = async (req, res) => {
 const updateCrewMember = async (req, res) => {
   //#swagger.tags = ['Crew']
   //#swagger.description = 'Update an existing crew member by ID'
-  const entryId = ObjectId.createFromHexString(req.params.id);
+  const crewId = ObjectId.createFromHexString(req.params.id);
   try {
-    if (!entryId) {
+    if (!crewId) {
       throw createError(404, "Entry does not exist.");
     }
   } catch (error) {
@@ -83,7 +83,7 @@ const updateCrewMember = async (req, res) => {
   const response = await mongodb
     .getDb()
     .collection("crew")
-    .replaceOne({ _id: entryId }, entry);
+    .replaceOne({ _id: crewId }, entry);
   if (response.modifiedCount > 0) {
     res.status(200).send();
   } else {
@@ -94,24 +94,22 @@ const updateCrewMember = async (req, res) => {
 const deleteCrewMember = async (req, res) => {
   //#swagger.tags = ['Crew']
   //#swagger.description = 'Delete a crew member by ID'
-  const entryId = ObjectId.createFromHexString(req.params.id);
-  const response = await mongodb
-    .getDb()
-    .collection("crew")
-    .deleteOne({ _id: entryId });
-  if (response.deletedCount > 0) {
-    res.status(200).send();
-  } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while deleting the user.");
-  }
-  try {
-    if (!response) {
-      throw createError(404, "Entry does not exist.");
+  try{
+    const crewId = ObjectId.createFromHexString(req.params.id);
+    const response = await mongodb
+      .getDb()
+      .collection("crew")
+      .deleteOne({ _id: crewId });
+    if (response.deletedCount === 0) {
+      throw createError(404, "Crew member ID does not exist.");
+    } else {
+      res
+        .status(200)
+        .json({message: "Crew member deleted succesfully."});
     }
   } catch (error) {
-    console.log(error.message);
+    console.error("Error deleting crew member:", error);
+    res.status(500).json({ message: "An error occurred while deleting the crew member." });
   }
 };
 

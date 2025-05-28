@@ -5,10 +5,9 @@
     "description": "API for a logging travel entries",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "https://api-travel-log.onrender.com/",
   "basePath": "/",
   "schemes": [
-    "https",
     "http"
   ],
   "paths": {
@@ -17,7 +16,7 @@
         "tags": [
           "Log"
         ],
-        "description": "Get all log entries for the year 2000-2001",
+        "description": "Get all log entries.",
         "produces": [
           "application/json"
         ],

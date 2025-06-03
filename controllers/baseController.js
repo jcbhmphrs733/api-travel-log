@@ -13,10 +13,7 @@ const buildHome = async (req, res) => {
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 </head>
 <body>
-    <h1>Welcome aboard!</h1>
-    <h2>Quick routes:</h2>
-    <a href="/log">getLog()</a>
-    <a href="/crew">getCrew()</a>
+    <h1>Welcome aboard ${req.session.user !== undefined ? `${req.session.user.username}!` : 'stranger!'} </h1>
     <a href="/api-docs">Swagger</a>
 </body>
 </html>`);

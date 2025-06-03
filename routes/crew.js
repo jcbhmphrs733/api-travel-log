@@ -5,20 +5,19 @@ const crewController = require("../controllers/crewController");
 const validateObjectId = require("../utils/validateObjectId");
 const validateCrewMember = require("../utils/validateCrewMember");
 
+const { isAuthenticated } = require("../middleware/authenticate");
+
+
+
 router.get("/", crewController.getCrew);
 
 router.get("/:id", validateObjectId, crewController.getCrewMember);
 
-router.post("/", validateCrewMember, crewController.postCrewMember);
+router.post("/", isAuthenticated, validateCrewMember, crewController.postCrewMember);
 
-router.put(
-  "/:id",
-  validateObjectId,
-  validateCrewMember,
-  crewController.updateCrewMember
-);
+router.put("/:id",isAuthenticated, validateObjectId, validateCrewMember, crewController.updateCrewMember);
 
-router.delete("/:id", validateObjectId, crewController.deleteCrewMember);
+router.delete("/:id", isAuthenticated, validateObjectId, crewController.deleteCrewMember);
 
 // router.post("/many", crewController.postMany);
 

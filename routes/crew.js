@@ -19,6 +19,6 @@ router.put("/:id",isAuthenticated, validateObjectId, validateCrewMember, crewCon
 
 router.delete("/:id", isAuthenticated, validateObjectId, crewController.deleteCrewMember);
 
-// router.post("/many", crewController.postMany);
+router.post("/many", crewController.postMany);
 
 module.exports = router;

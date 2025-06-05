@@ -1,8 +1,7 @@
 const router = require("../routes");
 
-router
 const buildHome = async (req, res) => {
-  //#swagger.tags = ['Home']
+  //#swagger.ignore = true
   res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>

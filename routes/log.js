@@ -17,6 +17,6 @@ router.put("/:id", isAuthenticated, validateObjectId, validateLogEntry, logContr
 
 router.delete("/:id", isAuthenticated, validateObjectId, logController.deleteEntry);
 
-// router.post("/many", logController.postMany);
+router.post("/many", logController.postMany);
 
 module.exports = router;

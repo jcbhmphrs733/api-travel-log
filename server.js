@@ -1,3 +1,4 @@
+console.log("Starting server...");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongodb = require("./data/database");
@@ -18,8 +19,7 @@ app
       secret: "secret",
       resave: false,
       saveUninitialized: true,
-    })
-  )
+    }))
   .use(passport.initialize())
   .use(passport.session())
   .use((req, res, next) => {
@@ -35,7 +35,8 @@ app
     next();
   })
   .use(cors({ methods: ["GET, POST, PUT, UPDATE, PATCH, DELETE"] }))
-  .use(cors({ origin: "*" }))
+  .use(cors({ origin: `http://localhost:${port}`,
+    credentials: true,}))
   .use("/", require("./routes/index"));
 
 passport.use(
@@ -61,6 +62,7 @@ passport.deserializeUser((user, done) => {
 app.get("/", require("./controllers/baseController").buildHome);
 
 app.get('/github/callback', passport.authenticate('github', {
+  //#swagger.ignore = true
   failureRedirect: '/api-docs', session: false}),
   (req, res) => {
     req.session.user = req.user;

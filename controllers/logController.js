@@ -5,7 +5,7 @@ const ObjectId = require("mongodb").ObjectId;
 
 const getLog = async (req, res) => {
   //#swagger.tags = ['Log']
-  //#swagger.description = 'Get all log entries for the year 2000-2001'
+  //#swagger.description = 'Get all log entries.'
   const response = await mongodb.getDb().collection("log").find();
   response
     .toArray()
@@ -125,6 +125,7 @@ const deleteEntry = async (req, res) => {
 };
 
 const postMany = async (req, res) => {
+  //#swagger.ignore = true
   //#swagger.tags = ['Log']
   //#swagger.description = 'Create multiple log entries at once'
   const entries = req.body; // Assuming entries is an array of entry objects

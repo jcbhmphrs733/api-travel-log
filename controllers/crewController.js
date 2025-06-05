@@ -123,6 +123,7 @@ const deleteCrewMember = async (req, res) => {
 };
 
 const postMany = async (req, res) => {
+  //#swagger.ignore = true
   //#swagger.tags = ['Crew']
   //#swagger.description = 'Create multiple crew members at once'
   try {
